@@ -3,7 +3,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-using namespace std;
+typedef std::vector< std::string > words_t;
+typedef std::map< char, words_t > readline_dic_t;
+
+readline_dic_t keyDic = {
+    {'a',{"abc", "cdb"} }
+    ,{'b',{"abc", "cdb", "bird", "buck"} }
+    ,{'c',{"abc", "cdb"} }
+    ,{'d',{"abc", "cdb"}  }
+    ,{'h',{"help", "hello"}  }
+};
 
 char trim_space_left( char* p, int len){
     char ch = ' ';
@@ -26,7 +35,10 @@ char trim_space_left( char* p, int len){
         }
     }
 
-    return p[0];
+    ch = p[0];
+    memset(p, 0x00, len);
+
+    return ch;
 }
 
 int main(int argc, const char** argv)
@@ -50,13 +62,12 @@ int main(int argc, const char** argv)
         char ch =  trim_space_left(pstr,  len );
 
         std::string c = pstr;
-        if ( ch == 'h') {
-            completions.push_back( c + "hello");
-            completions.push_back( c + "hello there");
-        }
-        else if( ch == 'b'){
-            completions.push_back( c + "bird");
-            completions.push_back( c + "buck");
+
+        readline_dic_t::iterator it = keyDic.find( ch );
+        if( it != keyDic.end() ){
+            for( words_t::iterator k = it->second.begin(); k != it->second.end(); ++k ){
+                completions.push_back(  c + *k );
+            }
         }
 
         free( pstr );
@@ -72,7 +83,7 @@ int main(int argc, const char** argv)
             break;
         }
 
-        cout <<  "echo: '" << line << "'" << endl;
+//        cout <<  "echo: '" << line << "'" << endl;
 
         // Add line to history
         linenoise::AddHistory(line.c_str());

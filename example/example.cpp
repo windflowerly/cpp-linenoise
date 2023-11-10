@@ -7,7 +7,7 @@ typedef std::vector< std::string > words_t;
 typedef std::map< char, words_t > readline_dic_t;
 
 readline_dic_t keyDic = {
-    {'a',{"abc", "cdb"} }
+     {'a',{"abc", "cdb"} }
     ,{'b',{"abc", "cdb", "bird", "buck"} }
     ,{'c',{"abc", "cdb"} }
     ,{'d',{"abc", "cdb"}  }
@@ -54,11 +54,13 @@ int main(int argc, const char** argv)
     // Setup completion words every time when a user types
     linenoise::SetCompletionCallback([](const char* editBuffer, std::vector<std::string>& completions) {
         int len = strlen(editBuffer);
+        
+        std::unique_ptr< char[] > cptr(new char[len+1]);
 
-        char * pstr = (char*)malloc( len + 1 );
-        memset( pstr, 0x00, len );
+        char * pstr = cptr.get();
+        memset( pstr, 0x00, len+1 );
+
         strncpy( pstr, editBuffer, len);
-
         char ch =  trim_space_left(pstr,  len );
 
         std::string c = pstr;
@@ -70,7 +72,6 @@ int main(int argc, const char** argv)
             }
         }
 
-        free( pstr );
     });
 
     // Load history
@@ -82,8 +83,6 @@ int main(int argc, const char** argv)
         if (quit) {
             break;
         }
-
-//        cout <<  "echo: '" << line << "'" << endl;
 
         // Add line to history
         linenoise::AddHistory(line.c_str());

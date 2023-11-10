@@ -2,17 +2,38 @@
 #include "../linenoise.hpp"
 #include <string.h>
 #include <stdlib.h>
+#include <set>
 
-typedef std::vector< std::string > words_t;
+typedef std::set< std::string > words_t;
 typedef std::map< char, words_t > readline_dic_t;
 
-readline_dic_t keyDic = {
+static readline_dic_t keyDic = {
      {'a',{"abc", "cdb"} }
     ,{'b',{"abc", "cdb", "bird", "buck"} }
     ,{'c',{"abc", "cdb"} }
-    ,{'d',{"abc", "cdb"}  }
     ,{'h',{"help", "hello"}  }
+    ,{'s',{"select"}  }
+    ,{'i',{"insert", "in" } }
+    ,{'u',{"update" } }
+    ,{'d',{"drop" } }
+    ,{'f',{"from" } }
+    ,{'j',{"join" } }
+    ,{'l',{"left" }  }
+    ,{'s',{"subscribe", "sub" }  }
 };
+
+void regist_word(const char* pWord){
+    char ch = pWord[0];
+    readline_dic_t::iterator it = keyDic.find(ch);
+    if( it != keyDic.end() ){
+        it->second.insert( std::string(pWord));
+    }
+    else{
+        std::set< std::string > s;
+        s.insert(std::string(pWord));
+        keyDic[ch] = s;
+    }
+}
 
 char trim_space_left( char* p, int len){
     char ch = ' ';

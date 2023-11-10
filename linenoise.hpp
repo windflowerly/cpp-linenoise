@@ -145,6 +145,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -156,6 +157,9 @@
 #include <functional>
 #include <vector>
 #include <iostream>
+#include <map>
+#include <memory>
+
 
 namespace linenoise {
 
